@@ -39,19 +39,15 @@ namespace Caliburn.Micro
                 {
                     squareBrackets--;
                 }
-                else if (current == separator)
+                else if (current == separator && squareBrackets == 0)
                 {
-                    if (squareBrackets == 0)
+                    if (!builder.IsNullOrEmpty())
                     {
-                        str = builder.ToString();
-                        if (!string.IsNullOrEmpty(str))
-                        {
-                            list.Add(builder.ToString().Trim());
-                        }
-
-                        builder.Length = 0;
-                        continue;
+                        list.Add(builder.ToString().Trim());
                     }
+
+                    builder.Clear();
+                    continue;
                 }
 
                 builder.Append(current);
@@ -89,12 +85,9 @@ namespace Caliburn.Micro
             {
                 var current = parameters[i];
 
-                if (current == '"' || current == '\'')
+                if ((current == '"' || current == '\'') && (i == 0 || parameters[i - 1] != '\\'))
                 {
-                    if (i == 0 || parameters[i - 1] != '\\')
-                    {
-                        isInString = !isInString;
-                    }
+                    isInString = !isInString;
                 }
 
                 if (!isInString)
@@ -128,7 +121,7 @@ namespace Caliburn.Micro
                                 //- Parantheses (to ignore method invocations)
                                 //- Curly brackets (to ignore initializers and Bindings)
                                 list.Add(builder.ToString());
-                                builder.Length = 0;
+                                builder.Clear();
                                 continue;
                             }
                             break;

@@ -172,21 +172,17 @@ namespace Caliburn.Micro
         /// <returns>All the instances or an empty enumerable if none are found.</returns>
         public IEnumerable<object> GetAllInstances(Type service, string key = null)
         {
-            var entries = GetEntry(service, key);
+            var currentEntry = GetEntry(service, key);
 
-            if (entries == null)
+            if (currentEntry == null)
             {
-                return new object[0];
+                return Enumerable.Empty<object>();
             }
 
-            var instances = entries.Select(e => e(this));
-
-            foreach (var instance in instances)
+            var instances = currentEntry.Select(e => e(this));
+            foreach (var instance in instances.Where(instance => EnablePropertyInjection && instance != null))
             {
-                if (EnablePropertyInjection && instance != null)
-                {
-                    BuildUp(instance);
-                }
+                BuildUp(instance);
             }
 
             return instances;
@@ -242,7 +238,7 @@ namespace Caliburn.Micro
                 return entries.FirstOrDefault(x => x.Key == key);
             }
 
-            if (key == null)
+            if (string.IsNullOrEmpty(key))
             {
                 return entries.FirstOrDefault(x => x.Service == service && string.IsNullOrEmpty(x.Key))
                        ?? entries.FirstOrDefault(x => x.Service == service);

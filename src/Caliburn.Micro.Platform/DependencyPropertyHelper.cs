@@ -7,6 +7,8 @@ using Microsoft.Maui.Controls;
 using DependencyProperty = Microsoft.Maui.Controls.BindableProperty;
 #elif WINDOWS_UWP
 using Windows.UI.Xaml;
+#elif WinUI3
+using Microsoft.UI.Xaml;
 #else
 using System.Windows;
 #endif
@@ -19,6 +21,7 @@ namespace Caliburn.Micro.Maui
 namespace Caliburn.Micro
 #endif
 {
+#if !AVALONIA
     /// <summary>
     /// Class that abstracts the differences in creating a DepedencyProperty / BindableProperty on the different platforms.
     /// </summary>
@@ -77,4 +80,5 @@ namespace Caliburn.Micro
 #endif
         }
     }
+#endif
 }

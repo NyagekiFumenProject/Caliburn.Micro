@@ -118,7 +118,6 @@ namespace Caliburn.Micro
                 await activator.ActivateAsync();
             }
 
-            GC.Collect();
         }
 
         /// <summary>
@@ -249,6 +248,9 @@ namespace Caliburn.Micro
             return frame.RemoveBackEntry();
         }
 
+        /// <summary>
+        /// Disposes the FrameAdapter instance, detaching event handlers to prevent memory leaks.
+        /// </summary>
         public void Dispose()
         {
             this.frame.Navigating -= OnNavigating;
